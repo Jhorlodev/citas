@@ -48,7 +48,7 @@ function Usuario() {
 
     return (
         <div className='flex flex-col items-center justify-center h-screen'>
-            <div className="form-container ">
+            <div className="form-container md:max-w-md ">
                 <p className="title">Registrar Cita</p>
                 <form className="form" onSubmit={handleSubmit}>
                     <div className="input-group">
