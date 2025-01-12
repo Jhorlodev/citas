@@ -28,9 +28,9 @@ function Login() {
                 console.log('Check your email for the login link!')
                 // Redirect based on user type
                 if (user && user.user_metadata.role === 'medico') {
-                    navigate('/medico')
+                    navigate('/Medico')
                 } else {
-                    navigate('/usuario')
+                    navigate('/Usuario')
                 }
             }
         } catch (error) {

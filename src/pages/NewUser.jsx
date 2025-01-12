@@ -30,7 +30,7 @@ function NewUser() {
                 // Redirect based on user type
                 if (user && user.user_metadata.role === 'medico') {
                     navigate('/medico')
-                } else {
+                } else if (user && user.user_metadata.role === 'usuario') {
                     navigate('/usuario')
                 }
             }
