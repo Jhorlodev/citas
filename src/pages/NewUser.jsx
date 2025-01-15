@@ -15,7 +15,31 @@ function NewUser() {
         try {
             const { error: insertError } = await supabase
                 .from('profiles')
-                .insert({ role: role, username: username })
+                .insert({ role: role, username: username, password: password, email: email })
+
+            if (email === '') {
+                alert('El campo Correo es obligatorio')
+                return
+            }
+
+            if (username || password || role === '') {
+                alert('El campo Usuario es obligatorio')
+                return
+            }
+
+
+
+            if (email.includes('@')) {
+                alert('El campo Correo debe ser un correo electrónico válido')
+                return
+            }
+
+            if (email.includes(' ')) {
+                alert('El campo Correo no debe contener espacios')
+                return
+            }
+
+
             console.log(insertError)
 
             // Sign up the user
@@ -24,10 +48,13 @@ function NewUser() {
                 password // Use the password from the input field
             })
 
+
+
             if (error) {
                 console.log(error)
                 return
             }
+
 
             // Update user metadata
             const { error: updateError } = await supabase.auth.update({
@@ -39,6 +66,8 @@ function NewUser() {
                 return
             }
 
+
+
             // Redirect based on user role
             if (user && user.user_metadata.role === 'medico') {
                 navigate('/medico')
@@ -48,6 +77,9 @@ function NewUser() {
         } catch (error) {
             console.log(error)
         }
+
+
+
     }
 
     return (
