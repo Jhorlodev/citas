@@ -54,6 +54,7 @@ function Usuario() {
             console.log(error)
         }
         navigate('/login/Login')
+
     }
 
     return (
