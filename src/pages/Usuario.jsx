@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { supabase } from '../components/lib/supabase'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { supabase } from '../components/lib/supabase';
+import { useNavigate } from 'react-router-dom';
 
 function Usuario() {
     const [formData, setFormData] = useState({
@@ -11,27 +11,57 @@ function Usuario() {
         consulta: 'domicilio',
         motivo: 'ecografia',
         otroMotivo: '',
-        horario: ''
-    })
-    const navigate = useNavigate()
+        horario: '',
+        fecha: '',
+    });
+    const [ocupados, setOcupados] = useState([]); // Para almacenar las horas ocupadas
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (formData.fecha) {
+            fetchCitas(); // Llama a fetchCitas cuando se selecciona una fecha
+        }
+    }, [formData.fecha]);
+
+    const fetchCitas = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('citas')
+                .select('horario')
+                .eq('fecha', formData.fecha); // Filtra por la fecha seleccionada
+
+            if (error) {
+                console.log(error);
+            } else {
+                setOcupados(data.map(cita => cita.horario)); // Almacena las horas ocupadas
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const handleChange = (e) => {
-        const { name, value } = e.target
-        setFormData({ ...formData, [name]: value })
-    }
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        const { propietario, paciente, direccion, telefono, consulta, motivo, otroMotivo, horario } = formData
+        e.preventDefault();
+        const { propietario, paciente, direccion, telefono, consulta, motivo, otroMotivo, horario, fecha } = formData;
+
+        if (ocupados.includes(horario)) {
+            alert('La cita ya está ocupada para esa hora. Por favor, elija otra opción.');
+            return;
+        }
 
         try {
             const { error } = await supabase.from('citas').insert([
-                { propietario, paciente, direccion, telefono, consulta, motivo: motivo === 'otro' ? otroMotivo : motivo, horario }
-            ])
+                { propietario, paciente, direccion, telefono, consulta, motivo: motivo === 'otro' ? otroMotivo : motivo, horario, fecha }
+            ]);
             if (error) {
-                console.log(error)
+                console.log(error);
             } else {
-                console.log('Cita registrada con éxito')
+                console.log('Cita registrada con éxito');
                 setFormData({
                     propietario: '',
                     paciente: '',
@@ -40,22 +70,23 @@ function Usuario() {
                     consulta: 'domicilio',
                     motivo: 'ecografia',
                     otroMotivo: '',
-                    horario: ''
-                })
+                    horario: '',
+                    fecha: '',
+                });
+                setOcupados([]); // Limpiar horas ocupadas
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
 
     const handleSignOut = async () => {
-        const { error } = await supabase.auth.signOut()
+        const { error } = await supabase.auth.signOut();
         if (error) {
-            console.log(error)
+            console.log(error);
         }
-        navigate('/login/Login')
-
-    }
+        navigate('/login/Login');
+    };
 
     return (
         <div className='flex flex-col items-center justify-center h-screen'>
@@ -149,15 +180,30 @@ function Usuario() {
                             onChange={handleChange}
                         >
                             {['08:00', '09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00'].map((time) => (
-                                <option key={time} value={time}>{time}</option>
+                                <option key={time} value={time} disabled={ocupados.includes(time)}>
+                                    {time} {ocupados.includes(time) && '(Ocupado)'}
+                                </option>
                             ))}
                         </select>
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="fecha">Fecha:</label>
+                        <input
+                            type="date"
+                            name="fecha"
+                            id="fecha"
+                            value={formData.fecha}
+                            onChange={(e) => {
+                                handleChange(e);
+                                fetchCitas();
+                            }}
+                        />
                     </div>
                     <button className="sign mb-3">Registrar</button>
                 </form>
             </div>
         </div>
-    )
+    );
 }
 
-export default Usuario
+export default Usuario;
