@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../components/lib/supabase'
+import { useNavigate } from 'react-router-dom'
 
 function Medico() {
     const [citas, setCitas] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         fetchCitas()
@@ -33,9 +35,17 @@ function Medico() {
             console.log(error)
         }
     }
+    const handleSignOut = async () => {
+        const { error } = await supabase.auth.signOut()
+        if (error) {
+            console.log(error, 'se ha cerrado sesión')
+        }
+        navigate('/login/Login')
+    }
 
     return (
         <div className='flex flex-col items-center justify-center h-screen'>
+            <button onClick={handleSignOut}>cerrar sesión</button>
             <div className="bg-[#111827] w-full sm:w-80 md:w-96 mx-auto p-6 rounded-lg shadow-lg">
                 <p className="title text-white text-xl font-bold mb-4">Citas Registradas</p>
                 <ul>

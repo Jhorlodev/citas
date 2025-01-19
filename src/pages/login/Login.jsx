@@ -1,98 +1,46 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../../components/lib/supabase'
 import './Login.css'
 
 function Login() {
     const [email, setEmail] = useState('')
-    const [role, setRole] = useState('usuario')
+    const [password, setPassword] = useState('')
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-
         try {
-            // Check if the user exists
-            const { data: existingUser, error: fetchError } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('email', email)
-                .single()
 
-            if (fetchError && fetchError.code !== 'PGRST116') {
-                console.log(fetchError)
-                return
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            })
+            if (error) {
+                console.log(error)
+                alert(error.message)
+                setEmail('')
+                setPassword('')
             }
-
-            let user
-
-            if (!existingUser) {
-                // Register the new user
-                const { user: newUser, error: signUpError } = await supabase.auth.signUp({
-                    email,
-                    options: {
-                        data: {
-                            role
-                        }
-                    }
-                })
-
-                if (signUpError) {
-                    console.log(signUpError)
-                    return
+            if (data) {
+                console.log(data)
+                if (data.user.user_metadata.role === 'medico') {
+                    navigate('/Medico')
+                } else {
+                    navigate('/Usuario')
                 }
-
-                user = newUser
-                console.log('Check your email for the registration link!')
-            } else {
-                // Sign in the existing user
-                const { user: existingUser, error: signInError } = await supabase.auth.signInWithOtp({
-                    email,
-                    options: {
-                        data: {
-                            role
-                        }
-                    }
-                })
-
-                if (signInError) {
-                    console.log(signInError)
-                    return
-                }
-
-                user = existingUser
-                console.log('Check your email for the login link!')
             }
 
-            setEmail('')
-
-            // Wait for the session to be established
-            const { data: { session } } = await supabase.auth.getSession()
-            if (session && session.user.user_metadata.role === 'medico') {
-                navigate('/Medico')
-            } else {
-                navigate('/Usuario')
-            }
         } catch (error) {
-            console.log(error)
+            alert(error.message)
         }
     }
 
-    const handleSignUp = async () => {
-        window.location.href = '/NewUser'
-    }
 
-    const handleSignOut = async () => {
-        const { error } = await supabase.auth.signOut()
-        if (error) {
-            console.log(error)
-        }
-        navigate('/login/Login')
-    }
 
     return (
         <div className='flex flex-col items-center justify-center h-screen'>
-            <button onClick={handleSignOut}>Salir</button>
+
             <div className="form-container bg-white p-6 rounded-lg shadow-md w-full max-w-md sm:w-80 md:w-96 mx-auto">
                 <p className="title text-2xl font-bold mb-4">Login</p>
                 <form className="form" onSubmit={handleSubmit}>
@@ -107,18 +55,19 @@ function Login() {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
+
                     <div className="input-group mb-4">
-                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">Rol:</label>
-                        <select
-                            name="role"
-                            id="role"
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña:</label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="******"
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            onChange={(e) => setRole(e.target.value)}
-                        >
-                            <option value="usuario">Usuario</option>
-                            <option value="medico">Medico</option>
-                        </select>
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
+
                     <button className="sign mb-3 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Sign in</button>
                 </form>
                 <div className="social-message flex items-center my-4">
@@ -143,8 +92,8 @@ function Login() {
                         </svg>
                     </button>
                 </div>
-                <p className="signup mt-4 text-sm text-gray-500">Don&apos;t have an account?
-                    <a rel="noopener noreferrer" href="#" className="ml-3 text-indigo-600 hover:text-indigo-700" onClick={handleSignUp}>Sign up</a>
+                <p className="signup mt-4 text-sm text-gray-500">No Tienes Una Cuenta?
+                    <Link to="/NewUser" className="ml-3 text-indigo-600 hover:text-indigo-700" >Sign up</Link>
                 </p>
             </div>
         </div>

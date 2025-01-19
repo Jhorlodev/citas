@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { supabase } from '../components/lib/supabase'
+import { useNavigate } from 'react-router-dom'
 
 function Usuario() {
     const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ function Usuario() {
         otroMotivo: '',
         horario: ''
     })
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -46,8 +48,18 @@ function Usuario() {
         }
     }
 
+    const handleSignOut = async () => {
+        const { error } = await supabase.auth.signOut()
+        if (error) {
+            console.log(error)
+        }
+        navigate('/login/Login')
+
+    }
+
     return (
         <div className='flex flex-col items-center justify-center h-screen'>
+            <button onClick={handleSignOut}>cerrar sesión</button>
             <div className="form-container md:max-w-md ">
                 <p className="title">Registrar Cita</p>
                 <form className="form" onSubmit={handleSubmit}>
