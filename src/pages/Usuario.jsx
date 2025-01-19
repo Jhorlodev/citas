@@ -11,7 +11,8 @@ function Usuario() {
         consulta: 'domicilio',
         motivo: 'ecografia',
         otroMotivo: '',
-        horario: ''
+        horario: '',
+        fecha: '',
     })
     const navigate = useNavigate()
 
@@ -22,11 +23,11 @@ function Usuario() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const { propietario, paciente, direccion, telefono, consulta, motivo, otroMotivo, horario } = formData
+        const { propietario, paciente, direccion, telefono, consulta, motivo, otroMotivo, horario, fecha } = formData
 
         try {
             const { error } = await supabase.from('citas').insert([
-                { propietario, paciente, direccion, telefono, consulta, motivo: motivo === 'otro' ? otroMotivo : motivo, horario }
+                { propietario, paciente, direccion, telefono, consulta, motivo: motivo === 'otro' ? otroMotivo : motivo, horario, fecha }
             ])
             if (error) {
                 console.log(error)
@@ -40,7 +41,8 @@ function Usuario() {
                     consulta: 'domicilio',
                     motivo: 'ecografia',
                     otroMotivo: '',
-                    horario: ''
+                    horario: '',
+                    fecha: '',
                 })
             }
         } catch (error) {
@@ -152,6 +154,16 @@ function Usuario() {
                                 <option key={time} value={time}>{time}</option>
                             ))}
                         </select>
+                    </div>
+                    <div className="input-group">
+                        <label htmlFor="fecha">Fecha:</label>
+                        <input
+                            type="date"
+                            name="fecha"
+                            id="fecha"
+                            value={formData.fecha}
+                            onChange={handleChange}
+                        />
                     </div>
                     <button className="sign mb-3">Registrar</button>
                 </form>

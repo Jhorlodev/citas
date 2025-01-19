@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../components/lib/supabase'
 import { useEffect } from 'react'
 
@@ -118,6 +118,7 @@ function NewUser() {
                         </select>
                     </div>
                     <button className="sign mb-3">Sign Up</button>
+                    <p>volver a  <Link to="/login/Login">login</Link></p>
                 </form>
             </div>
         </div>
