@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../components/lib/supabase'
+import { useEffect } from 'react'
 
 function NewUser() {
     const [email, setEmail] = useState('')
@@ -9,77 +10,65 @@ function NewUser() {
     const [role, setRole] = useState('usuario') // Default role
     const navigate = useNavigate()
 
+    useEffect(() => {
+        const fetchSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (session) {
+                console.log('hay usuario')
+                console.log(session.user.user_metadata.role)
+            }
+        }
+        fetchSession()
+    }, [])
+
     const handleSignUp = async (e) => {
         e.preventDefault()
 
         try {
+            const { user, error: signUpError } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        username,
+                        role
+                    }
+                }
+            })
+
+            if (signUpError) {
+                console.log(signUpError)
+                alert(signUpError.message)
+                return
+            }
+
+            // Insert user profile into the profiles table
             const { error: insertError } = await supabase
                 .from('profiles')
-                .insert({ role: role, username: username, password: password, email: email })
+                .insert({ role, email, username, password })
 
-            if (email === '') {
-                alert('El campo Correo es obligatorio')
+            if (insertError) {
+                console.log(insertError)
+                alert('Error al registrar el perfil')
                 return
             }
 
-            if (username || password || role === '') {
-                alert('El campo Usuario es obligatorio')
-                return
-            }
+            console.log(user)
 
-
-
-            if (email.includes('@')) {
-                alert('El campo Correo debe ser un correo electrónico válido')
-                return
-            }
-
-            if (email.includes(' ')) {
-                alert('El campo Correo no debe contener espacios')
-                return
-            }
-
-
-            console.log(insertError)
-
-            // Sign up the user
-            const { user, error } = await supabase.auth.signUp({
-                email,
-                password // Use the password from the input field
-            })
-
-
-
-            if (error) {
-                console.log(error)
-                return
-            }
-
-
-            // Update user metadata
-            const { error: updateError } = await supabase.auth.update({
-                data: { username, role }
-            })
-
-            if (updateError) {
-                console.log(updateError)
-                return
-            }
-
-
-
-            // Redirect based on user role
-            if (user && user.user_metadata.role === 'medico') {
-                navigate('/medico')
-            } else if (user && user.user_metadata.role === 'usuario') {
-                navigate('/usuario')
+            // Wait for the session to be established
+            const { data: { session } } = await supabase.auth.getSession()
+            if (session) {
+                if (session.user.user_metadata.role === 'medico') {
+                    navigate('/Medico')
+                } else {
+                    navigate('/Usuario')
+                }
+            } else {
+                navigate('/login/Login')
             }
         } catch (error) {
             console.log(error)
         }
-
-
-
     }
 
     return (

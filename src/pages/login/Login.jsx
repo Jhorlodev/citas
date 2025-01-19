@@ -1,33 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../../components/lib/supabase'
 import './Login.css'
 
 function Login() {
     const [email, setEmail] = useState('')
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
     const [role, setRole] = useState('usuario')
     const navigate = useNavigate()
 
-    useEffect(() => {
-        const checkSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession()
-            if (session) {
-                const { user } = session
-                if (user.role === 'medico') {
-                    navigate('/Medico')
-                } else {
-                    navigate('/Usuario')
-                }
-            }
-        }
-        checkSession()
-    }, [navigate])
-
-
     const handleSubmit = async (e) => {
-
         e.preventDefault()
 
         try {
@@ -49,10 +30,8 @@ function Login() {
                 // Register the new user
                 const { user: newUser, error: signUpError } = await supabase.auth.signUp({
                     email,
-                    password,
                     options: {
                         data: {
-                            username,
                             role
                         }
                     }
@@ -71,7 +50,6 @@ function Login() {
                     email,
                     options: {
                         data: {
-                            username,
                             role
                         }
                     }
@@ -84,12 +62,9 @@ function Login() {
 
                 user = existingUser
                 console.log('Check your email for the login link!')
-                console.log('user:', user)
             }
 
             setEmail('')
-            setUsername('')
-            setPassword('')
 
             // Wait for the session to be established
             const { data: { session } } = await supabase.auth.getSession()
@@ -107,8 +82,17 @@ function Login() {
         window.location.href = '/NewUser'
     }
 
+    const handleSignOut = async () => {
+        const { error } = await supabase.auth.signOut()
+        if (error) {
+            console.log(error)
+        }
+        navigate('/login/Login')
+    }
+
     return (
         <div className='flex flex-col items-center justify-center h-screen'>
+            <button onClick={handleSignOut}>Salir</button>
             <div className="form-container bg-white p-6 rounded-lg shadow-md w-full max-w-md sm:w-80 md:w-96 mx-auto">
                 <p className="title text-2xl font-bold mb-4">Login</p>
                 <form className="form" onSubmit={handleSubmit}>
@@ -124,17 +108,6 @@ function Login() {
                         />
                     </div>
                     <div className="input-group mb-4">
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Usuario:</label>
-                        <input
-                            type="text"
-                            name="username"
-                            id="username"
-                            placeholder="Nombre de usuario"
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            onChange={(e) => setUsername(e.target.value)}
-                        />
-                    </div>
-                    <div className="input-group mb-4">
                         <label htmlFor="role" className="block text-sm font-medium text-gray-700">Rol:</label>
                         <select
                             name="role"
@@ -146,19 +119,6 @@ function Login() {
                             <option value="medico">Medico</option>
                         </select>
                     </div>
-                    {role === 'medico' && (
-                        <div className="input-group mb-4">
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña:</label>
-                            <input
-                                type="password"
-                                name="password"
-                                id="password"
-                                placeholder="Contraseña"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                    )}
                     <button className="sign mb-3 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Sign in</button>
                 </form>
                 <div className="social-message flex items-center my-4">
