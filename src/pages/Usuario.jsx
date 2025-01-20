@@ -89,9 +89,9 @@ function Usuario() {
     };
 
     return (
-        <div className='flex flex-col items-center justify-center h-screen'>
-            <button onClick={handleSignOut}>cerrar sesión</button>
-            <div className="form-container md:max-w-md ">
+        <div className='flex flex-col  items-center justify-center h-screen'>
+            <button className='m-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleSignOut}>cerrar sesión</button>
+            <div className="form-container md:max-w-md sm:bg-white p-6 rounded-lg shadow-lg">
                 <p className="title">Registrar Cita</p>
                 <form className="form" onSubmit={handleSubmit}>
                     <div className="input-group">
@@ -137,6 +137,7 @@ function Usuario() {
                     <div className="input-group">
                         <label htmlFor="consulta">Consulta:</label>
                         <select
+                            className='mb-2 p-2 px-4 rounded-md shadow-md shadow-[#A78BFA] focus:border-1 focus:border-[#A78BFA] bg-[#111827] text-white'
                             name="consulta"
                             id="consulta"
                             value={formData.consulta}
@@ -149,6 +150,7 @@ function Usuario() {
                     <div className="input-group">
                         <label htmlFor="motivo">Motivo de la consulta:</label>
                         <select
+                            className='mb-2 p-2 px-4 rounded-md shadow-md shadow-[#A78BFA] bg-[#111827] text-white'
                             name="motivo"
                             id="motivo"
                             value={formData.motivo}
@@ -174,6 +176,7 @@ function Usuario() {
                     <div className="input-group">
                         <label htmlFor="horario">Horario:</label>
                         <select
+                            className='mb-2 p-2 px-4 rounded-md shadow-md shadow-[#A78BFA] bg-[#111827] text-white'
                             name="horario"
                             id="horario"
                             value={formData.horario}
@@ -189,6 +192,7 @@ function Usuario() {
                     <div className="input-group">
                         <label htmlFor="fecha">Fecha:</label>
                         <input
+                            className='mb-4'
                             type="date"
                             name="fecha"
                             id="fecha"
