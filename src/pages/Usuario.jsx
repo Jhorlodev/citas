@@ -73,7 +73,7 @@ function Usuario() {
                     horario: '',
                     fecha: '',
                 });
-                setOcupados([]); // Limpiar horas ocupadas
+                setOcupados([]);
             }
         } catch (error) {
             console.log(error);
