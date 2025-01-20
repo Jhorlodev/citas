@@ -89,14 +89,15 @@ function Usuario() {
     };
 
     return (
-        <div className='flex flex-col  items-center justify-center h-screen md:max-w-2xl'>
+        <div className='flex flex-col  mx-auto items-center justify-center  md:max-w-2xl'>
             <button className='m-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleSignOut}>cerrar sesión</button>
-            <div className="form-container md:max-w-md sm:bg-white p-6 rounded-lg shadow-lg">
+            <div className="  bg-[#17202a] md:max-w-md sm:bg-white p-6 rounded-lg shadow-lg">
                 <p className="title">Registrar Cita</p>
                 <form className="form" onSubmit={handleSubmit}>
                     <div className="input-group">
                         <label htmlFor="propietario">Propietario:</label>
                         <input
+                            className="text-white"
                             type="text"
                             name="propietario"
                             id="propietario"
