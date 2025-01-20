@@ -93,7 +93,7 @@ function Login() {
                     </button>
                 </div>
                 <p className="signup mt-4 text-sm text-gray-500">No Tienes Una Cuenta?
-                    <Link to="/NewUser" className="ml-3 text-indigo-600 hover:text-indigo-700" >Sign up</Link>
+                    <Link to="/NewUser" className="ml-3  hover:text-indigo-700" >Sign up</Link>
                 </p>
             </div>
         </div>

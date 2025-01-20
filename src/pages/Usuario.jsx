@@ -89,7 +89,7 @@ function Usuario() {
     };
 
     return (
-        <div className='flex flex-col  items-center justify-center h-screen'>
+        <div className='flex flex-col  items-center justify-center h-screen md:max-w-2xl'>
             <button className='m-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleSignOut}>cerrar sesión</button>
             <div className="form-container md:max-w-md sm:bg-white p-6 rounded-lg shadow-lg">
                 <p className="title">Registrar Cita</p>

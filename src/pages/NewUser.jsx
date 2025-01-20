@@ -73,7 +73,7 @@ function NewUser() {
 
     return (
         <div className='flex flex-col items-center justify-center h-screen'>
-            <div className="form-container">
+            <div className="form-container bg-white p-6 rounded-lg shadow-md w-full max-w-md sm:w-80 md:w-96 mx-auto">
                 <p className="title">Sign Up</p>
                 <form className="form" onSubmit={handleSignUp}>
                     <div className="input-group">
@@ -109,6 +109,7 @@ function NewUser() {
                     <div className="input-group">
                         <label htmlFor="role">Rol:</label>
                         <select
+                            className="mb-5 p-2 px-4 rounded-md shadow-md shadow-[#A78BFA] bg-[#111827] text-white'"
                             name="role"
                             id="role"
                             onChange={(e) => setRole(e.target.value)}
@@ -118,7 +119,8 @@ function NewUser() {
                         </select>
                     </div>
                     <button className="sign mb-3">Sign Up</button>
-                    <p>volver a  <Link to="/login/Login">login</Link></p>
+                    <p className="signup mt-4 text-sm text-gray-500"  >volver a  <Link to="/login/Login"
+                    className="ml-3 text-indigo-600 hover:text-indigo-700">login</Link></p>
                 </form>
             </div>
         </div>
