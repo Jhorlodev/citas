@@ -74,7 +74,7 @@ function NewUser() {
     return (
         <div className='flex flex-col items-center justify-center h-screen'>
             <div className="form-container bg-white p-6 rounded-lg shadow-md w-full max-w-md sm:w-80 md:w-96 mx-auto">
-                <p className="title">Sign Up</p>
+                <p className="title">Iniciar Sesion</p>
                 <form className="form" onSubmit={handleSignUp}>
                     <div className="input-group">
                         <label htmlFor="email">Correo:</label>
@@ -118,9 +118,9 @@ function NewUser() {
                             <option value="medico">Medico</option>
                         </select>
                     </div>
-                    <button className="sign mb-3">Sign Up</button>
+                    <button className="sign mb-3">Crear Cuenta</button>
                     <p className="signup mt-4 text-sm text-gray-500"  >volver a  <Link to="/login/Login"
-                    className="ml-3 text-indigo-600 hover:text-indigo-700">login</Link></p>
+                    className="ml-3 text-indigo-600 hover:text-indigo-700">Iniciar Sesion</Link></p>
                 </form>
             </div>
         </div>

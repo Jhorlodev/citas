@@ -42,7 +42,7 @@ function Login() {
         <div className='flex flex-col items-center justify-center h-screen'>
 
             <div className="form-container bg-white p-6 rounded-lg shadow-md w-full max-w-md sm:w-80 md:w-96 mx-auto">
-                <p className="title text-2xl font-bold mb-4">Login</p>
+                <p className="title text-2xl font-bold mb-4">Iniciar Sesion</p>
                 <form className="form" onSubmit={handleSubmit}>
                     <div className="input-group mb-4">
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo:</label>
@@ -68,7 +68,7 @@ function Login() {
                         />
                     </div>
 
-                    <button className="sign mb-3 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Sign in</button>
+                    <button className="sign mb-3 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Iniciar Sesion</button>
                 </form>
                 <div className="social-message flex items-center my-4">
                     <div className="line flex-grow border-t border-gray-300"></div>
@@ -93,7 +93,7 @@ function Login() {
                     </button>
                 </div>
                 <p className="signup mt-4 text-sm text-gray-500">No Tienes Una Cuenta?
-                    <Link to="/NewUser" className="ml-3  hover:text-indigo-700" >Sign up</Link>
+                    <Link to="/NewUser" className="ml-3  hover:text-indigo-700" >Crear Cuenta</Link>
                 </p>
             </div>
         </div>

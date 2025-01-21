@@ -206,7 +206,7 @@ function Usuario() {
                             }}
                         />
                     </div>
-                    <button className="sign mb-3">Registrar</button>
+                    <button className="sign mb-3">Agende su cita</button>
                 </form>
             </div>
         </div>

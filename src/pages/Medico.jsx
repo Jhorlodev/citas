@@ -47,7 +47,7 @@ function Medico() {
     return (
         <div className='flex items-center justify-center min-h-screen bg-[#111827]'>
             <div className="flex flex-col bg-[#111827] w-full max-w-4xl mx-auto p-6 rounded-lg shadow-lg">
-                <p className="title text-white text-xl font-bold mb-4 text-center">Citas Registradas</p>
+                <p className="title text-white text-xl font-bold mb-4 text-center">Citas  Agendadas</p>
                 <ul className="flex flex-col gap-4">
                     {citas.map((cita) => (
                         <li key={cita.id} className="mb-4 p-5 flex flex-col gap-2 bg-gray-800 rounded-md">
