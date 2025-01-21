@@ -61,7 +61,7 @@ function Usuario() {
             if (error) {
                 console.log(error);
             } else {
-                console.log('Cita registrada con éxito');
+                alert('Cita registrada con éxito');
                 setFormData({
                     propietario: '',
                     paciente: '',
@@ -90,7 +90,9 @@ function Usuario() {
 
     return (
         <div className='flex flex-col  mx-auto items-center justify-center  md:max-w-2xl'>
-            <button className='m-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' onClick={handleSignOut}>cerrar sesión</button>
+            <button 
+            className='m-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' 
+            onClick={handleSignOut}>cerrar sesión </button>
             <div className="  bg-[#17202a] md:max-w-md sm:bg-white p-6 rounded-lg shadow-lg">
                 <p className="title">Registrar Cita</p>
                 <form className="form" onSubmit={handleSubmit}>
