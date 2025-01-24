@@ -45,9 +45,9 @@ function Medico() {
     };
 
     return (
-        <div className='flex items-center justify-center min-h-screen bg-[#111827]'>
-            <div className="flex flex-col bg-[#111827] w-full max-w-4xl mx-auto p-6 rounded-lg shadow-lg">
-                <p className="title text-white text-xl font-bold mb-4 text-center">Citas  Agendadas</p>
+        <div className='flex items-center justify-center min-h-screen bg-white'>
+            <div className="flex flex-col bg-white w-full max-w-4xl mx-auto p-6 rounded-lg shadow-lg">
+                <p className="title text-black text-xl font-extrabold mb-12 mt-10 text-center"><strong>Citas  Agendadas</strong></p>
                 <ul className="flex flex-col gap-4">
                     {citas.map((cita) => (
                         <li key={cita.id} className="mb-4 p-5 flex flex-col gap-2 bg-gray-800 rounded-md">
@@ -60,7 +60,7 @@ function Medico() {
                             <p className="text-white"><strong>Horario:</strong> {cita.horario}</p>
                             <p className="text-white"><strong>Fecha:</strong> {cita.fecha}</p>
                             <button
-                                className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                className="mt-2 bg-[#db1f32] hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                                 onClick={() => handleDelete(cita.id)}
                             >
                                 Eliminar
@@ -70,7 +70,7 @@ function Medico() {
                 </ul>
                 <button
                     onClick={handleSignOut}
-                    className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded self-center"
+                    className="mt-4 bg-[#db1f32] hover:bg-red-700 text-white font-bold py-2 px-4 rounded self-center"
                 >
                     Cerrar sesión
                 </button>

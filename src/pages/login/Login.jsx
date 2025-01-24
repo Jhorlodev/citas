@@ -11,89 +11,97 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-
             const { data, error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
             })
             if (error) {
-                console.log(error)
                 alert(error.message)
                 setEmail('')
                 setPassword('')
+                return
             }
-            if (data) {
-                console.log(data)
-                if (data.user.user_metadata.role === 'medico') {
-                    navigate('/Medico')
-                } else {
-                    navigate('/Usuario')
-                }
+            if (data?.user?.user_metadata?.role === 'medico') {
+                navigate('/Medico')
+            } else {
+                navigate('/Usuario')
             }
-
         } catch (error) {
             alert(error.message)
         }
     }
 
-
-
     return (
-        <div className='flex flex-col items-center justify-center h-screen'>
-
-            <div className="form-container bg-white p-6 rounded-lg shadow-md w-full max-w-md sm:w-80 md:w-96 mx-auto">
-                <p className="title text-2xl font-bold mb-4">Iniciar Sesion</p>
-                <form className="form" onSubmit={handleSubmit}>
-                    <div className="input-group mb-4">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Correo:</label>
+        <div className='flex flex-col items-center justify-center h-screen bg-[#edf7f7]'>
+            <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md sm:w-80 md:w-96 mx-auto">
+                <p className="text-2xl font-bold mb-4 text-gray-800">Iniciar Sesión</p>
+                
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-4">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                            Correo:
+                        </label>
                         <input
-                            type="text"
-                            name="email"
+                            type="email"
                             id="email"
                             placeholder="Usuario@ejemplo.com"
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
+                            value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
                     </div>
 
-                    <div className="input-group mb-4">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña:</label>
+                    <div className="mb-6">
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                            Contraseña:
+                        </label>
                         <input
                             type="password"
-                            name="password"
                             id="password"
-                            placeholder="******"
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="•••••••"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md shadow-sm  focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
+                            value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                     </div>
 
-                    <button className="sign mb-3 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">Iniciar Sesion</button>
+                    <button 
+                        type="submit" 
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition-colors"
+                    >
+                        Ingresar
+                    </button>
                 </form>
-                <div className="social-message flex items-center my-4">
-                    <div className="line flex-grow border-t border-gray-300"></div>
-                    <p className="message mx-4 text-sm text-gray-500">Login with social accounts</p>
-                    <div className="line flex-grow border-t border-gray-300"></div>
+
+                <div className="flex items-center my-6">
+                    <div className="flex-grow border-t border-gray-300"></div>
+                    <span className="px-4 text-sm text-gray-500">o continúa con</span>
+                    <div className="flex-grow border-t border-gray-300"></div>
                 </div>
-                <div className="social-icons flex justify-center space-x-4">
-                    <button aria-label="Log in with Google" className="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-6 h-6 fill-current text-gray-700">
-                            <path d="M16.318 13.714v5.484h9.078c-0.37 2.354-2.745 6.901-9.078 6.901-5.458 0-9.917-4.521-9.917-10.099s4.458-10.099 9.917-10.099c3.109 0 5.193 1.318 6.38 2.464l4.339-4.182c-2.786-2.599-6.396-4.182-10.719-4.182-8.844 0-16 7.151-16 16s7.156 16 16 16c9.234 0 15.365-6.49 15.365-15.635 0-1.052-0.115-1.854-0.255-2.651z"></path>
+
+                <div className="flex justify-center space-x-4 mb-6">
+                    <button className="p-2 rounded-full hover:bg-gray-100">
+                        <svg className="w-6 h-6 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z"/>
                         </svg>
                     </button>
-                    <button aria-label="Log in with Twitter" className="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-6 h-6 fill-current text-gray-700">
-                            <path d="M31.937 6.093c-1.177 0.516-2.437 0.871-3.765 1.032 1.355-0.813 2.391-2.099 2.885-3.631-1.271 0.74-2.677 1.276-4.172 1.579-1.192-1.276-2.896-2.079-4.787-2.079-3.625 0-6.563 2.937-6.563 6.557 0 0.521 0.063 1.021 0.172 1.495-5.453-0.255-10.287-2.875-13.52-6.833-0.568 0.964-0.891 2.084-0.891 3.303 0 2.281 1.161 4.281 2.916 5.457-1.073-0.031-2.083-0.328-2.968-0.817v0.079c0 3.181 2.26 5.833 5.26 6.437-0.547 0.145-1.131 0.229-1.724 0.229-0.421 0-0.823-0.041-1.224-0.115 0.844 2.604 3.26 4.5 6.14 4.557-2.239 1.755-5.077 2.801-8.135 2.801-0.521 0-1.041-0.025-1.563-0.088 2.917 1.86 6.36 2.948 10.079 2.948 12.067 0 18.661-9.995 18.661-18.651 0-0.276 0-0.557-0.021-0.839 1.287-0.917 2.401-2.079 3.281-3.396z"></path>
-                        </svg>
-                    </button>
-                    <button aria-label="Log in with GitHub" className="icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-6 h-6 fill-current text-gray-700">
-                            <path d="M16 0.396c-8.839 0-16 7.167-16 16 0 7.073 4.584 13.068 10.937 15.183 0.803 0.151 1.093-0.344 1.093-0.772 0-0.38-0.009-1.385-0.015-2.719-4.453 0.964-5.391-2.151-5.391-2.151-0.729-1.844-1.781-2.339-1.781-2.339-1.448-0.989 0.115-0.968 0.115-0.968 1.604 0.109 2.448 1.645 2.448 1.645 1.427 2.448 3.744 1.74 4.661 1.328 0.14-1.031 0.557-1.74 1.011-2.135-3.552-0.401-7.287-1.776-7.287-7.907 0-1.751 0.62-3.177 1.645-4.297-0.177-0.401-0.719-2.031 0.141-4.235 0 0 1.339-0.427 4.4 1.641 1.281-0.355 2.641-0.532 4-0.541 1.36 0.009 2.719 0.187 4 0.541 3.043-2.068 4.381-1.641 4.381-1.641 0.859 2.204 0.317 3.833 0.161 4.235 1.015 1.12 1.635 2.547 1.635 4.297 0 6.145-3.74 7.5-7.296 7.891 0.556 0.479 1.077 1.464 1.077 2.959 0 2.14-0.020 3.864-0.020 4.385 0 0.416 0.28 0.916 1.104 0.755 6.4-2.093 10.979-8.093 10.979-15.156 0-8.833-7.161-16-16-16z"></path>
+                    <button className="p-2 rounded-full hover:bg-gray-100">
+                        <svg className="w-6 h-6 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M23.954 4.569c-.885.389-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.951.555-2.005.959-3.127 1.184-.896-.959-2.173-1.559-3.591-1.559-2.717 0-4.92 2.203-4.92 4.917 0 .39.045.765.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.722-.666 1.561-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.377-1.68 1.319-3.809 2.105-6.102 2.105-.39 0-.779-.023-1.17-.067 2.189 1.394 4.768 2.209 7.557 2.209 9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63.961-.689 1.8-1.56 2.46-2.548l-.047-.02z"/>
                         </svg>
                     </button>
                 </div>
-                <p className="signup mt-4 text-sm text-gray-500">No Tienes Una Cuenta?
-                    <Link to="/NewUser" className="ml-3  hover:text-indigo-700" >Crear Cuenta</Link>
+
+                <p className="text-center text-sm text-gray-500">
+                    ¿No tienes cuenta? {' '}
+                    <Link 
+                        to="/NewUser" 
+                        className="text-indigo-600 hover:text-indigo-700 font-medium"
+                    >
+                        Regístrate aquí
+                    </Link>
                 </p>
             </div>
         </div>

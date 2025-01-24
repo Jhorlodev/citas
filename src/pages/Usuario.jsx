@@ -89,60 +89,70 @@ function Usuario() {
     };
 
     return (
-        <div className='flex flex-col  mx-auto items-center justify-center  md:max-w-2xl'>
+        <div className='flex flex-col mx-auto items-center justify-center md:max-w-2xl min-h-screen bg-gray-50'>
             <button 
-            className='m-5 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded' 
-            onClick={handleSignOut}>cerrar sesión </button>
-            <div className="  bg-[#17202a] md:max-w-md sm:bg-white p-6 rounded-lg shadow-lg">
-                <p className="title">Registrar Cita</p>
-                <form className="form" onSubmit={handleSubmit}>
-                    <div className="input-group">
-                        <label htmlFor="propietario">Propietario:</label>
+                className='m-5 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors' 
+                onClick={handleSignOut}
+            >
+                Cerrar sesión
+            </button>
+            
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">Registrar Cita</h1>
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                    <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="propietario">Propietario:</label>
                         <input
-                            className="text-white"
+                            className="w-full px-3 py-2 border bg-[#D3D6E2] text-black text-bold  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
                             type="text"
                             name="propietario"
-                            id="propietario"
+                            required
                             value={formData.propietario}
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="paciente">Paciente:</label>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="paciente">Paciente:</label>
                         <input
+                            className="w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold  rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
                             type="text"
                             name="paciente"
-                            id="paciente"
+                            required
                             value={formData.paciente}
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="direccion">Dirección:</label>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="direccion">Dirección:</label>
                         <input
+                            className="w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
                             type="text"
                             name="direccion"
-                            id="direccion"
+                            required
                             value={formData.direccion}
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="telefono">Teléfono:</label>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="telefono">Teléfono:</label>
                         <input
+                            className="w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
                             type="text"
                             name="telefono"
-                            id="telefono"
+                            required
                             value={formData.telefono}
                             onChange={handleChange}
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="consulta">Consulta:</label>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="consulta">Consulta:</label>
                         <select
-                            className='mb-2 p-2 px-4 rounded-md shadow-md shadow-[#A78BFA] focus:border-1 focus:border-[#A78BFA] bg-[#111827] text-white'
+                            className="w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1] bg-white"
                             name="consulta"
-                            id="consulta"
                             value={formData.consulta}
                             onChange={handleChange}
                         >
@@ -150,38 +160,38 @@ function Usuario() {
                             <option value="consultorio">Consultorio</option>
                         </select>
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="motivo">Motivo de la consulta:</label>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="motivo">Motivo:</label>
                         <select
-                            className='mb-2 p-2 px-4 rounded-md shadow-md shadow-[#A78BFA] bg-[#111827] text-white'
+                            className="w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1] bg-white"
                             name="motivo"
-                            id="motivo"
                             value={formData.motivo}
                             onChange={handleChange}
                         >
                             <option value="ecografia">Ecografía</option>
                             <option value="rayos_x">Rayos X</option>
                             <option value="vacunacion">Vacunación</option>
-                            <option value="desparacitacion">Desparacitación</option>
+                            <option value="desparacitacion">Desparasitación</option>
                             <option value="otro">Otro</option>
                         </select>
                         {formData.motivo === 'otro' && (
                             <input
+                                className="w-full px-3 py-2 mt-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
                                 type="text"
-                                name="otroMotivo"
-                                id="otroMotivo"
                                 placeholder="Especifique el motivo"
+                                name="otroMotivo"
                                 value={formData.otroMotivo}
                                 onChange={handleChange}
                             />
                         )}
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="horario">Horario:</label>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="horario">Horario:</label>
                         <select
-                            className='mb-2 p-2 px-4 rounded-md shadow-md shadow-[#A78BFA] bg-[#111827] text-white'
+                            className="w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1] bg-white"
                             name="horario"
-                            id="horario"
                             value={formData.horario}
                             onChange={handleChange}
                         >
@@ -192,13 +202,14 @@ function Usuario() {
                             ))}
                         </select>
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="fecha">Fecha:</label>
+
+                    <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700" htmlFor="fecha">Fecha:</label>
                         <input
-                            className='mb-4'
+                            className="w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
                             type="date"
                             name="fecha"
-                            id="fecha"
+                            required
                             value={formData.fecha}
                             onChange={(e) => {
                                 handleChange(e);
@@ -206,7 +217,13 @@ function Usuario() {
                             }}
                         />
                     </div>
-                    <button className="sign mb-3">Agende su cita</button>
+
+                    <button 
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                        type="submit"
+                    >
+                        Agendar Cita
+                    </button>
                 </form>
             </div>
         </div>
