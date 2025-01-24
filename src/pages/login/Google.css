@@ -17,12 +17,12 @@
     background-color: #fff;
     cursor: pointer;
     transition: all .6s ease;
-  }
-  
-  .google svg {
+}
+
+.google svg {
     height: 24px;
-  }
-  
-  .google:hover {
+}
+
+.google:hover {
     transform: scale(1.02);
-  }
+}
