@@ -1,6 +1,6 @@
 
-button {
-    max-width: 320px;
+.google {
+    max-width: 310px;
     display: flex;
     padding: 0.5rem 1.4rem;
     font-size: 0.875rem;
@@ -19,10 +19,10 @@ button {
     transition: all .6s ease;
   }
   
-  .button svg {
+  .google svg {
     height: 24px;
   }
   
-  button:hover {
+  .google:hover {
     transform: scale(1.02);
   }

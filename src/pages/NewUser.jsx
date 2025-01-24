@@ -1,21 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../components/lib/supabase'
-import { useEffect } from 'react'
 
 function NewUser() {
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [role, setRole] = useState('usuario') // Default role
+    const [role, setRole] = useState('usuario')
     const navigate = useNavigate()
 
     useEffect(() => {
         const fetchSession = async () => {
             const { data: { session } } = await supabase.auth.getSession()
             if (session) {
-                console.log('hay usuario')
-                console.log(session.user.user_metadata.role)
+                console.log('Usuario autenticado:', session.user.user_metadata.role)
             }
         }
         fetchSession()
@@ -25,6 +23,7 @@ function NewUser() {
         e.preventDefault()
 
         try {
+            // Registro de autenticación
             const { user, error: signUpError } = await supabase.auth.signUp({
                 email,
                 password,
@@ -37,90 +36,141 @@ function NewUser() {
             })
 
             if (signUpError) {
-                console.log(signUpError)
                 alert(signUpError.message)
                 return
             }
 
-            // Insert user profile into the profiles table
-            const { error: insertError } = await supabase
+            // Registro en tabla profiles
+            const { error: profileError } = await supabase
                 .from('profiles')
-                .insert({ role, email, username, password })
+                .insert({ 
+                    role, 
+                    email, 
+                    username, 
+                    password 
+                })
 
-            if (insertError) {
-                console.log(insertError)
-                alert('Error al registrar el perfil')
+            if (profileError) {
+                alert('Error al crear el perfil')
                 return
             }
 
-            console.log(user)
-
-            // Wait for the session to be established
+            // Redirección según rol
             const { data: { session } } = await supabase.auth.getSession()
-            if (session) {
-                if (session.user.user_metadata.role === 'medico') {
-                    navigate('/Medico')
-                } else {
-                    navigate('/Usuario')
-                }
+            if (session?.user?.user_metadata?.role === 'medico') {
+                navigate('/Medico')
             } else {
-                navigate('/login/Login')
+                navigate('/Usuario')
             }
+
         } catch (error) {
-            console.log(error)
+            console.error('Error en registro:', error)
+            alert('Error en el proceso de registro')
         }
     }
 
     return (
-        <div className='flex flex-col items-center justify-center h-screen'>
-            <div className="form-container bg-white p-6 rounded-lg shadow-md w-full max-w-md sm:w-80 md:w-96 mx-auto">
-                <p className="title">Iniciar Sesion</p>
-                <form className="form" onSubmit={handleSignUp}>
-                    <div className="input-group">
-                        <label htmlFor="email">Correo:</label>
+        <div className='flex flex-col items-center justify-center min-h-screen bg-[#edf7f7] p-4'>
+            <div className="bg-white rounded-lg shadow-md w-full max-w-md p-6">
+                <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+                    Crear Nueva Cuenta
+                </h1>
+                
+                <form onSubmit={handleSignUp} className="space-y-4">
+                    {/* Email */}
+                    <div>
+                        <label 
+                            htmlFor="email" 
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Correo electrónico
+                        </label>
                         <input
-                            type="text"
-                            name="email"
+                            type="email"
                             id="email"
-                            placeholder="Usuario@ejemplo.com"
+                            value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            placeholder="ejemplo@correo.com"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
+                            required
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="username">Usuario:</label>
+
+                    {/* Username */}
+                    <div>
+                        <label 
+                            htmlFor="username" 
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Nombre de usuario
+                        </label>
                         <input
                             type="text"
-                            name="username"
                             id="username"
-                            placeholder="Nombre de usuario"
+                            value={username}
                             onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Tu nombre de usuario"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
+                            required
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="password">Contraseña:</label>
+
+                    {/* Password */}
+                    <div>
+                        <label 
+                            htmlFor="password" 
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Contraseña
+                        </label>
                         <input
                             type="password"
-                            name="password"
                             id="password"
-                            placeholder="Contraseña"
+                            value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
+                            required
                         />
                     </div>
-                    <div className="input-group">
-                        <label htmlFor="role">Rol:</label>
+
+                    {/* Role Select */}
+                    <div>
+                        <label 
+                            htmlFor="role" 
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Tipo de cuenta
+                        </label>
                         <select
-                            className="mb-5 p-2 px-4 rounded-md shadow-md shadow-[#A78BFA] bg-[#111827] text-white'"
-                            name="role"
                             id="role"
+                            value={role}
                             onChange={(e) => setRole(e.target.value)}
+                            className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
                         >
                             <option value="usuario">Usuario</option>
-                            <option value="medico">Medico</option>
+                            <option value="medico">Médico</option>
                         </select>
                     </div>
-                    <button className="sign mb-3">Crear Cuenta</button>
-                    <p className="signup mt-4 text-sm text-gray-500"  >volver a  <Link to="/login/Login"
-                    className="ml-3 text-indigo-600 hover:text-indigo-700">Iniciar Sesion</Link></p>
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                    >
+                        Registrar Cuenta
+                    </button>
+
+                    {/* Login Link */}
+                    <p className="text-center text-sm text-gray-600 mt-4">
+                        ¿Ya tienes cuenta?{' '}
+                        <Link 
+                            to="/login/Login" 
+                            className="text-indigo-600 hover:text-indigo-700 font-medium"
+                        >
+                            Iniciar Sesión
+                        </Link>
+                    </p>
                 </form>
             </div>
         </div>
