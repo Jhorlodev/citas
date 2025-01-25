@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../../components/lib/supabase'
+import { FaUser } from "react-icons/fa";
+import { RiLockPasswordFill } from "react-icons/ri";
 import './Login.css'
 import './Google.css'
 function Login() {
@@ -34,12 +36,16 @@ function Login() {
     return (
         <div className='flex flex-col items-center justify-center h-screen bg-[#edf7f7]'>
             <div className="bg-white p-6 rounded-lg shadow-lg   sm:w-80 md:w-[500px] md:h-[650px] justify-center mx-auto">
-                <p className="  text-center text-3xl font-extrabold mb-9  text-gray-800 ">Iniciar Sesión</p>
+                <p className="  text-center text-3xl font-extrabold mb-9 mt-11 text-gray-800 ">Iniciar Sesión</p>
 
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            Correo:
+                    <div className="mb-5">
+                        <label htmlFor="email" className=" flex  text-sm  font-medium text-gray-700">
+                            <div className='flex gap-2 items-center'>
+
+                                Correo:
+                                <FaUser className='w-5 h-5 mb-2' />
+                            </div>
                         </label>
                         <input
                             type="email"
@@ -54,7 +60,10 @@ function Login() {
 
                     <div className="mb-6">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                            Contraseña:
+                            <div className='flex gap-2 items-center'>
+                                Contraseña:
+                                <RiLockPasswordFill className='w-5 h-5 mb-2' />
+                            </div>
                         </label>
                         <input
                             type="password"
@@ -69,7 +78,7 @@ function Login() {
 
                     <button
                         type="submit"
-                        className="w-full mx-auto text-center  bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition-colors"
+                        className="w-full mx-auto text-center mt-2 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md transition-colors"
                     >
                         Ingresar
                     </button>
@@ -82,7 +91,7 @@ function Login() {
                 </div>
 
                 <div className="flex justify-center  ">
-                    <button className="google">
+                    <button className="google mt-5">
                         <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid" viewBox="0 0 256 262">
                             <path fill="#4285F4" d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622 38.755 30.023 2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"></path>
                             <path fill="#34A853" d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055-34.523 0-63.824-22.773-74.269-54.25l-1.531.13-40.298 31.187-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"></path>
@@ -94,15 +103,15 @@ function Login() {
 
                 </div>
                 <div className="mt-4"  >
-                <p className="text-center text-sm text-gray-500">
-                    ¿No tienes cuenta? {' '}
-                    <Link
-                        to="/NewUser"
-                        className="text-indigo-600 hover:text-indigo-700 font-medium"
-                    >
-                        Regístrate aquí
-                    </Link>
-                </p>
+                    <p className="text-center text-sm text-gray-500">
+                        ¿No tienes cuenta? {' '}
+                        <Link
+                            to="/NewUser"
+                            className="text-indigo-600 hover:text-indigo-700 font-medium"
+                        >
+                            Regístrate aquí
+                        </Link>
+                    </p>
                 </div>
             </div>
         </div>

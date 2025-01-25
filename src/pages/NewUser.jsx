@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../components/lib/supabase'
+import { MdEmail } from "react-icons/md";
+import { FaUser } from "react-icons/fa6";
+import { RiLockPasswordFill } from "react-icons/ri";
+
 
 function NewUser() {
     const [email, setEmail] = useState('')
@@ -23,7 +27,7 @@ function NewUser() {
         e.preventDefault()
 
         try {
-            // Registro de autenticación
+
             const { user, error: signUpError } = await supabase.auth.signUp({
                 email,
                 password,
@@ -43,11 +47,11 @@ function NewUser() {
             // Registro en tabla profiles
             const { error: profileError } = await supabase
                 .from('profiles')
-                .insert({ 
-                    role, 
-                    email, 
-                    username, 
-                    password 
+                .insert({
+                    role,
+                    email,
+                    username,
+                    password
                 })
 
             if (profileError) {
@@ -75,15 +79,17 @@ function NewUser() {
                 <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
                     Crear Nueva Cuenta
                 </h1>
-                
+
                 <form onSubmit={handleSignUp} className="space-y-4">
                     {/* Email */}
                     <div>
-                        <label 
-                            htmlFor="email" 
+                        <label
+                            htmlFor="email"
                             className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            Correo electrónico
+                            <div className='flex gap-2 items-center'>
+                                Correo electrónico: <MdEmail className='w-5 h-5 mb-2' />
+                            </div>
                         </label>
                         <input
                             type="email"
@@ -98,11 +104,13 @@ function NewUser() {
 
                     {/* Username */}
                     <div>
-                        <label 
-                            htmlFor="username" 
+                        <label
+                            htmlFor="username"
                             className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            Nombre de usuario
+                            <div className='flex gap-2 items-center'>
+                                Nombre de usuario: <FaUser className='w-5 h-5 mb-2' />
+                            </div>
                         </label>
                         <input
                             type="text"
@@ -117,11 +125,14 @@ function NewUser() {
 
                     {/* Password */}
                     <div>
-                        <label 
-                            htmlFor="password" 
+                        <label
+                            htmlFor="password"
                             className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            Contraseña
+                            <div className='flex gap-2 items-center'>
+                                Contraseña: <RiLockPasswordFill className='w-5 h-5 mb-2' />
+                            </div>
+
                         </label>
                         <input
                             type="password"
@@ -134,13 +145,16 @@ function NewUser() {
                         />
                     </div>
 
-                    {/* Role Select */}
+
                     <div>
-                        <label 
-                            htmlFor="role" 
+                        <label
+                            htmlFor="role"
                             className="block text-sm font-medium text-gray-700 mb-1"
                         >
-                            Tipo de cuenta
+                            <div className='flex gap-2 items-center'>
+                                Tipo de cuenta: <FaUser className='w-5 h-5 mb-2' />
+                            </div>
+
                         </label>
                         <select
                             id="role"
@@ -164,8 +178,8 @@ function NewUser() {
                     {/* Login Link */}
                     <p className="text-center text-sm text-gray-600 mt-4">
                         ¿Ya tienes cuenta?{' '}
-                        <Link 
-                            to="/login/Login" 
+                        <Link
+                            to="/login/Login"
                             className="text-indigo-600 hover:text-indigo-700 font-medium"
                         >
                             Iniciar Sesión

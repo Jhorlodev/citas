@@ -89,14 +89,14 @@ function Usuario() {
     };
 
     return (
-        <div className='flex flex-col mx-auto items-center justify-center md:max-w-2xl min-h-screen bg-gray-50'>
-            <button 
-                className='m-5 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors' 
+        <div className='flex flex-col mx-auto items-center justify-center  lg:max-w-full md:max-w-full  min-h-screen bg-[#edf7f7]'>
+            <button
+                className='m-5 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors'
                 onClick={handleSignOut}
             >
                 Cerrar sesión
             </button>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                 <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">Registrar Cita</h1>
                 <form className="space-y-4" onSubmit={handleSubmit}>
@@ -218,7 +218,7 @@ function Usuario() {
                         />
                     </div>
 
-                    <button 
+                    <button
                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
                         type="submit"
                     >
