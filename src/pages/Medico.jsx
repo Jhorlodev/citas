@@ -45,7 +45,7 @@ function Medico() {
     };
 
     return (
-        <div className='flex items-center justify-center min-h-screen bg-white'>
+        <div className='flex items-center justify-center min-h-screen bg-[#edf7f7]'>
             <div className="flex flex-col bg-white w-full max-w-4xl mx-auto p-6 rounded-lg shadow-lg">
                 <p className="title text-black text-xl font-extrabold mb-12 mt-10 text-center"><strong>Citas  Agendadas</strong></p>
                 <ul className="flex flex-col gap-4">
