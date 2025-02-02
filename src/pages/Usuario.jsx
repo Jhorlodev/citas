@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../components/lib/supabase';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,15 +14,47 @@ function Usuario() {
         otroMotivo: '',
         horario: '',
         fecha: '',
+        user_id: uuidv4(),
     });
     const [ocupados, setOcupados] = useState([]); // Para almacenar las horas ocupadas
+    const [citas, setCitas] = useState([]); // Para almacenar las citas del usuario
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                await fetchUserCitas(user.id);
+                console.log(user.id);
+            } else {
+                navigate('/login/Login');
+            }
+        };
+        checkSession();
+    }, [navigate]);
 
     useEffect(() => {
         if (formData.fecha) {
             fetchCitas(); // Llama a fetchCitas cuando se selecciona una fecha
         }
     }, [formData.fecha]);
+
+    const fetchUserCitas = async (id) => {
+        try {
+            const { data, error } = await supabase
+                .from('citas')
+                .select('*')
+                .eq('user_id', id); // Filtra por el ID del usuario (metadata)
+
+            if (error) {
+                console.log(error);
+            } else {
+                setCitas(data); // Almacena las citas del usuario
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const fetchCitas = async () => {
         try {
@@ -47,7 +80,7 @@ function Usuario() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const { propietario, paciente, direccion, telefono, consulta, motivo, otroMotivo, horario, fecha } = formData;
+        const { propietario, paciente, direccion, telefono, consulta, motivo, otroMotivo, horario, fecha, user_id } = formData;
 
         if (ocupados.includes(horario)) {
             alert('La cita ya está ocupada para esa hora. Por favor, elija otra opción.');
@@ -55,8 +88,9 @@ function Usuario() {
         }
 
         try {
+            const { data: { user } } = await supabase.auth.getUser();
             const { error } = await supabase.from('citas').insert([
-                { propietario, paciente, direccion, telefono, consulta, motivo: motivo === 'otro' ? otroMotivo : motivo, horario, fecha }
+                { propietario, user_id, paciente, direccion, telefono, consulta, motivo: motivo === 'otro' ? otroMotivo : motivo, horario, fecha, }
             ]);
             if (error) {
                 console.log(error);
@@ -74,6 +108,7 @@ function Usuario() {
                     fecha: '',
                 });
                 setOcupados([]);
+                fetchUserCitas(user.id); // Actualiza las citas del usuario
             }
         } catch (error) {
             console.log(error);
@@ -225,6 +260,27 @@ function Usuario() {
                         Agendar Cita
                     </button>
                 </form>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md mt-6">
+                <h2 className="text-xl font-bold mb-4 text-gray-800 text-center">Mis Citas</h2>
+                {citas.length > 0 ? (
+                    <ul className="space-y-2">
+                        {citas.map((cita) => (
+                            <li key={cita.id} className="border p-4 rounded-md">
+                                <p><strong>Paciente:</strong> {cita.paciente}</p>
+                                <p><strong>Dirección:</strong> {cita.direccion}</p>
+                                <p><strong>Teléfono:</strong> {cita.telefono}</p>
+                                <p><strong>Consulta:</strong> {cita.consulta}</p>
+                                <p><strong>Motivo:</strong> {cita.motivo}</p>
+                                <p><strong>Horario:</strong> {cita.horario}</p>
+                                <p><strong>Fecha:</strong> {cita.fecha}</p>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="text-center text-gray-500">No tienes citas registradas.</p>
+                )}
             </div>
         </div>
     );
