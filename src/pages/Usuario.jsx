@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '../components/lib/supabase';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 function Usuario() {
     const [formData, setFormData] = useState({
@@ -95,7 +96,12 @@ function Usuario() {
             if (error) {
                 console.log(error);
             } else {
-                alert('Cita registrada con éxito');
+                Swal.fire({
+                    title: 'Cita Agendada',
+                    text: 'La cita se ha agendado correctamente.',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
                 setFormData({
                     propietario: '',
                     paciente: '',
