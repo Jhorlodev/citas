@@ -6,7 +6,7 @@ import NewUser from './pages/NewUser';
 
 function App() {
     return (
-        <BrowserRouter basename="/">
+        <BrowserRouter basename="/citas">
             <Routes>
                 <Route path="/login/Login" element={<Login />} />
                 <Route path="/Medico" element={<Medico />} />
