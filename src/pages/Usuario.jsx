@@ -84,7 +84,12 @@ function Usuario() {
         const { propietario, paciente, direccion, telefono, consulta, motivo, otroMotivo, horario, fecha, user_id } = formData;
 
         if (ocupados.includes(horario)) {
-            alert('La cita ya está ocupada para esa hora. Por favor, elija otra opción.');
+            Swal.fire({
+                title: 'Cita Ocupada',
+                text: 'La cita ya está ocupada para esa hora, elija otra opción por favor.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
             return;
         }
 
