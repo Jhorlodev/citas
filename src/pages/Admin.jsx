@@ -38,14 +38,14 @@ function Admin() {
             });
 
             if (result.isConfirmed) {
-
-                const { error } = await supabase.from('citas').delete().eq('user_id', id);
+                // Eliminar la cita
+                const { error } = await supabase.from('citas').delete().eq('id', id);
                 if (error) {
                     throw error;
                 }
-
+                // Actualizar la lista de citas
                 await fetchCitas();
-
+                // Mostrar mensaje de éxito
                 Swal.fire('¡Eliminado!', 'La cita ha sido eliminada.', 'success');
             }
         } catch (error) {
@@ -162,7 +162,7 @@ function Admin() {
             </div>
 
             {/* Contenido principal */}
-            <div className="lg:ml-64 p-4 lg:p-8 bg-amber-100">
+            <div className="lg:ml-64 p-4 lg:p-8 h-screen bg-amber-100">
                 {/* Vista General */}
                 {currentView === "general" && (
                     <>
