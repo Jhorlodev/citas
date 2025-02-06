@@ -236,7 +236,7 @@ function Usuario() {
                     <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700" htmlFor="horario">Horario:</label>
                         <select
-                            className="w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1] bg-white"
+                            className="w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md focus:outline-none focus:ring-2 focus:ring-[#a5d3f1] "
                             name="horario"
                             value={formData.horario}
                             onChange={handleChange}
