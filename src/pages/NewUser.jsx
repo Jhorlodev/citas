@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { v4 as uuid } from 'uuid'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../components/lib/supabase'
 import { MdEmail } from "react-icons/md";
@@ -28,7 +29,7 @@ function NewUser() {
 
         try {
 
-            const { user, error: signUpError } = await supabase.auth.signUp({
+            const { error: signUpError } = await supabase.auth.signUp({
                 email,
                 password,
                 options: {
@@ -40,6 +41,7 @@ function NewUser() {
             })
 
             if (signUpError) {
+                console.log(signUpError.message)
                 alert(signUpError.message)
                 return
             }
@@ -51,11 +53,13 @@ function NewUser() {
                     role,
                     email,
                     username,
-                    password
+                    password,
+                    usuario_id: uuid()
                 })
 
             if (profileError) {
                 alert('Error al crear el perfil')
+                console.log(profileError.message)
                 return
             }
 

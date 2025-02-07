@@ -5,11 +5,35 @@ import Swal from 'sweetalert2';
 
 function Admin() {
     const [citas, setCitas] = useState([]);
+    const [editingCita, setEditingCita] = useState(null); // Estado para manejar la cita en edición
+    const [doctors, setDoctors] = useState([
+        {
+            id: 1,
+            name: "Dr. Juan Pérez",
+            specialty: "Cirugía"
+        },
+        {
+            id: 2,
+            name: "Dra. Ana López",
+            specialty: "Dermatología"
+        }
+    ]);
+    const [showSidebar, setShowSidebar] = useState(false); // Controla la visibilidad del panel en móviles
+    const [currentView, setCurrentView] = useState("general"); // Controla la vista actual (general o médicos)
+    const [newDoctor, setNewDoctor] = useState({ name: "", specialty: "" }); // Estado para el formulario de nuevo médico
 
+    // Estado para las tarjetas de resumen
+    const [todayAppointments, setTodayAppointments] = useState(0);
+    const [nextAppointment, setNextAppointment] = useState(null);
+    const [timeRemaining, setTimeRemaining] = useState("");
+    const [totalConsultations, setTotalConsultations] = useState(0);
+
+    // Obtener las citas al cargar el componente
     useEffect(() => {
         fetchCitas();
     }, []);
 
+    // Función para obtener las citas desde Supabase
     const fetchCitas = async () => {
         try {
             const { data, error } = await supabase.from('citas').select('*');
@@ -23,9 +47,9 @@ function Admin() {
         }
     };
 
+    // Función para eliminar una cita
     const handleDelete = async (id) => {
         try {
-            // Mostrar confirmación
             const result = await Swal.fire({
                 title: '¿Estás seguro?',
                 text: "¡No podrás revertir esto!",
@@ -38,14 +62,11 @@ function Admin() {
             });
 
             if (result.isConfirmed) {
-                // Eliminar la cita
                 const { error } = await supabase.from('citas').delete().eq('id', id);
                 if (error) {
                     throw error;
                 }
-                // Actualizar la lista de citas
                 await fetchCitas();
-                // Mostrar mensaje de éxito
                 Swal.fire('¡Eliminado!', 'La cita ha sido eliminada.', 'success');
             }
         } catch (error) {
@@ -54,36 +75,43 @@ function Admin() {
         }
     };
 
-    const [doctors, setDoctors] = useState([
-        {
-            id: 1,
-            name: "Dr. Juan Pérez",
-            specialty: "Cirugía"
-        },
-        {
-            id: 2,
-            name: "Dra. Ana López",
-            specialty: "Dermatología"
+    // Función para manejar la edición de una cita
+    const handleEdit = (cita) => {
+        setEditingCita(cita);
+    };
+
+    // Función para guardar los cambios de la edición
+    const handleSaveEdit = async () => {
+        try {
+            const { error } = await supabase
+                .from('citas')
+                .update(editingCita)
+                .eq('id', editingCita.id);
+
+            if (error) {
+                throw error;
+            }
+
+            await fetchCitas();
+            setEditingCita(null);
+            Swal.fire('¡Actualizado!', 'La cita ha sido actualizada.', 'success');
+        } catch (error) {
+            console.error('Error actualizando la cita:', error);
+            Swal.fire('Error', 'No se pudo actualizar la cita.', 'error');
         }
-    ]);
+    };
 
-    const [showSidebar, setShowSidebar] = useState(false); // Controla la visibilidad del panel en móviles
-    const [currentView, setCurrentView] = useState("general"); // Controla la vista actual (general o médicos)
-    const [newDoctor, setNewDoctor] = useState({ name: "", specialty: "" }); // Estado para el formulario de nuevo médico
-
-    // Estado para las tarjetas de resumen
-    const [todayAppointments, setTodayAppointments] = useState(0);
-    const [nextAppointment, setNextAppointment] = useState(null);
-    const [timeRemaining, setTimeRemaining] = useState("");
-    const [totalConsultations, setTotalConsultations] = useState(0);
+    // Función para cancelar la edición
+    const handleCancelEdit = () => {
+        setEditingCita(null);
+    };
 
     // Función para calcular las citas de hoy, la próxima cita y el tiempo restante
     useEffect(() => {
-        const today = new Date().toISOString().split("T")[0]; // Fecha de hoy en formato YYYY-MM-DD
-        const todayApps = citas.filter((cita) => cita.fecha === today); // Asegúrate de que el campo sea 'fecha'
+        const today = new Date().toISOString().split("T")[0];
+        const todayApps = citas.filter((cita) => cita.fecha === today);
         setTodayAppointments(todayApps.length);
 
-        // Encontrar la próxima cita
         const now = new Date();
         const upcomingApps = citas
             .filter((cita) => new Date(`${cita.fecha}T${cita.horario}`) > now)
@@ -101,14 +129,10 @@ function Admin() {
             setTimeRemaining("No hay citas próximas");
         }
 
-        // Total de consultas
         setTotalConsultations(citas.length);
     }, [citas]);
 
-    const toggleSidebar = () => {
-        setShowSidebar(!showSidebar);
-    };
-
+    // Función para agregar un nuevo médico
     const handleAddDoctor = (e) => {
         e.preventDefault();
         const doctor = {
@@ -117,14 +141,14 @@ function Admin() {
             specialty: newDoctor.specialty
         };
         setDoctors([...doctors, doctor]);
-        setNewDoctor({ name: "", specialty: "" }); // Limpiar el formulario
+        setNewDoctor({ name: "", specialty: "" });
     };
 
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Botón para mostrar/ocultar el panel en móviles */}
             <button
-                onClick={toggleSidebar}
+                onClick={() => setShowSidebar(!showSidebar)}
                 className="fixed lg:hidden z-50 top-4 left-4 p-2 bg-blue-600 text-white rounded-lg shadow"
             >
                 <Menu className="w-5 h-5" />
@@ -203,31 +227,106 @@ function Admin() {
                                 </thead>
                                 <tbody className="divide-y divide-gray-200">
                                     {citas.map((cita) => (
-                                        <tr key={cita.id} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    <PawPrint className="w-5 h-5 text-gray-400 mr-2" />
-                                                    <span className="text-sm font-medium text-gray-900">{cita.paciente}</span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.propietario}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.fecha}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.horario}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.direccion}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.motivo}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <div className="flex gap-2">
-                                                    <button className="text-blue-600 hover:text-blue-900">
-                                                        <Edit className="w-5 h-5" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleDelete(cita.id)}
-                                                        className="text-red-600 hover:text-red-900">
-                                                        <Trash2 className="w-5 h-5" />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        <>
+                                            {editingCita && editingCita.id === cita.id ? (
+                                                <tr key={cita.id} className="bg-blue-50">
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <input
+                                                            type="text"
+                                                            value={editingCita.paciente}
+                                                            onChange={(e) => setEditingCita({ ...editingCita, paciente: e.target.value })}
+                                                            className="p-2 border rounded-lg w-full"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <input
+                                                            type="text"
+                                                            value={editingCita.propietario}
+                                                            onChange={(e) => setEditingCita({ ...editingCita, propietario: e.target.value })}
+                                                            className="p-2 border rounded-lg w-full"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <input
+                                                            type="date"
+                                                            value={editingCita.fecha}
+                                                            onChange={(e) => setEditingCita({ ...editingCita, fecha: e.target.value })}
+                                                            className="p-2 border rounded-lg w-full"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <input
+                                                            type="time"
+                                                            value={editingCita.horario}
+                                                            onChange={(e) => setEditingCita({ ...editingCita, horario: e.target.value })}
+                                                            className="p-2 border rounded-lg w-full"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <input
+                                                            type="text"
+                                                            value={editingCita.direccion}
+                                                            onChange={(e) => setEditingCita({ ...editingCita, direccion: e.target.value })}
+                                                            className="p-2 border rounded-lg w-full"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <input
+                                                            type="text"
+                                                            value={editingCita.motivo}
+                                                            onChange={(e) => setEditingCita({ ...editingCita, motivo: e.target.value })}
+                                                            className="p-2 border rounded-lg w-full"
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                        <div className="flex gap-2">
+                                                            <button
+                                                                onClick={handleSaveEdit}
+                                                                className="text-green-600 hover:text-green-900"
+                                                            >
+                                                                Guardar
+                                                            </button>
+                                                            <button
+                                                                onClick={handleCancelEdit}
+                                                                className="text-gray-600 hover:text-gray-900"
+                                                            >
+                                                                Cancelar
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                <tr key={cita.id} className="hover:bg-gray-50">
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center">
+                                                            <PawPrint className="w-5 h-5 text-gray-400 mr-2" />
+                                                            <span className="text-sm font-medium text-gray-900">{cita.paciente}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.propietario}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.fecha}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.horario}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.direccion}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cita.motivo}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                        <div className="flex gap-2">
+                                                            <button
+                                                                onClick={() => handleEdit(cita)}
+                                                                className="text-blue-600 hover:text-blue-900"
+                                                            >
+                                                                <Edit className="w-5 h-5" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDelete(cita.id)}
+                                                                className="text-red-600 hover:text-red-900"
+                                                            >
+                                                                <Trash2 className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </>
                                     ))}
                                 </tbody>
                             </table>
