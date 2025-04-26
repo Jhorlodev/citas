@@ -65,8 +65,8 @@ function NewUser() {
 
             // Redirección según rol
             const { data: { session } } = await supabase.auth.getSession()
-            if (session?.user?.user_metadata?.role === 'medico') {
-                navigate('/Medico')
+            if (session?.user?.user_metadata?.role === 'Medico') {
+                navigate('/Admin')
             } else {
                 navigate('/Usuario')
             }
@@ -166,8 +166,8 @@ function NewUser() {
                             onChange={(e) => setRole(e.target.value)}
                             className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-[#D3D6E2] text-black text-bold rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#a5d3f1]"
                         >
-                            <option value="usuario">Usuario</option>
-                            <option value="medico">Médico</option>
+                            <option value="Usuario">Usuario</option>
+                            <option value="Medico">Médico</option>
                         </select>
                     </div>
 

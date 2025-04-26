@@ -23,8 +23,8 @@ function Login() {
                 setPassword('')
                 return
             }
-            if (data?.user?.user_metadata?.role === 'medico') {
-                navigate('/Medico')
+            if (data?.user?.user_metadata?.role === 'Medico') {
+                navigate('/Admin')
             } else {
                 navigate('/Usuario')
             }
